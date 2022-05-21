@@ -10,6 +10,17 @@ import { useNavigate, Link } from "react-router-dom";
 import { getWorldData, getGlobalData } from "../Redux/action";
 import { Bar } from "react-chartjs-2";
 
+import {
+  LineChart,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+  Line,
+  YAxis,
+  XAxis,
+  CartesianGrid,
+} from "recharts";
+
 const Global = () => {
   const dispatch = useDispatch();
   const globals = useSelector((state) => state.myReducer.globalData);
@@ -45,6 +56,7 @@ const Global = () => {
   }
 
   const { deaths, recovered, active } = worlds;
+  console.log(worlds, "world");
 
   return (
     <div className="main">
@@ -188,10 +200,29 @@ const Global = () => {
             </div>
             <h6> Confirmed (cumulative)</h6>
             <div className="second-img">
-              <img
+              {/* <img
                 className="second-img"
                 src="https://ichef.bbci.co.uk/news/976/cpsprodpb/11A2C/production/_114963227_356632b3-6fef-4fe3-8f33-e5d456597143-1.png"
-              />
+              /> */}
+              <ResponsiveContainer width="100%" aspect={3}>
+                <LineChart
+                  data={[deaths, active, recovered]}
+                  margin={{ right: 300 }}
+                >
+                  <CartesianGrid />
+                  <XAxis dataKey="worlds" interval={"preserveStartEnd"} />
+                  <YAxis></YAxis>
+                  <Legend />
+                  <Tooltip />
+                  <Line datakey="death" stroke="red" activeDot={{ r: 8 }} />
+                  <Line datakey="active" stroke="yellow" activeDot={{ r: 8 }} />
+                  <Line
+                    datakey="recovered"
+                    stroke="green"
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
             <h6>Daily cases confirmed</h6>
             <div className="third-img">
