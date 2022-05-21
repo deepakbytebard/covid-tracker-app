@@ -4,6 +4,7 @@ import { Dropdown, Toogle } from "bootstrap";
 import { BsMap, BsSearch } from "react-icons/bs";
 import { DiDigitalOcean } from "react-icons/di";
 import { FiFlag } from "react-icons/fi";
+import { Bar } from "react-chartjs-2";
 import { MdOutlineDashboard } from "react-icons/md";
 import { MdLocalHospital } from "react-icons/md";
 
@@ -12,14 +13,14 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { getCountryData } from "../Redux/action";
 
 const Country = () => {
-  const {state} = useLocation();
+  const { state } = useLocation();
 
   const dispatch = useDispatch();
   const countryi = useSelector((state) => state.myReducer.countryData);
   console.log(countryi, "======))))wdginern");
 
   useEffect(() => {
-    const countryData = state.payload
+    const countryData = state.payload;
     console.log("countryData===>", state);
     const loadCountryData = () => {
       dispatch(getCountryData(state.payload));
@@ -39,8 +40,7 @@ const Country = () => {
 
   const { cases, deaths, recovered, country, active, critical } = countryi;
 
-
-//   const { updated, deaths, recovered } = country;
+  //   const { updated, deaths, recovered } = country;
 
   let navigate = useNavigate();
   return (
@@ -102,21 +102,25 @@ const Country = () => {
               </div>
               <div className="col ">
                 <h4 className="confirmed">Total Confirmed</h4>
-                <h3 className="confirmed-number">{numDifferentiation( cases)}</h3>
+                <h3 className="confirmed-number">
+                  {numDifferentiation(cases)}
+                </h3>
                 <div className="confirmed-virus">
                   <FaVirus color="red" />
                 </div>
               </div>
               <div className="col ">
                 <h4 className="confirmed">Total Deaths</h4>
-                <h3 className="Death-number">{numDifferentiation (deaths)}</h3>
+                <h3 className="Death-number">{numDifferentiation(deaths)}</h3>
                 <div className="confirmed-virus">
                   <FaVirus color="red" />
                 </div>
               </div>
               <div className="col ">
                 <h4 className="confirmed">Total Recovered</h4>
-                <h3 className="recovered-number">{numDifferentiation (recovered)}</h3>
+                <h3 className="recovered-number">
+                  {numDifferentiation(recovered)}
+                </h3>
                 <div className="confirmed-virus">
                   <FaVirus color="red" />
                 </div>
@@ -156,7 +160,6 @@ const Country = () => {
                   <h6>Critical</h6>
                   <h6>{critical}</h6>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -176,9 +179,45 @@ const Country = () => {
             </div>
             <h6>Daily cases confirmed</h6>
             <div className="third-img">
-              <img
-                className="third-img"
-                src="https://www.ifpri.org/sites/default/files/Blog/covid_figure1.png"
+              <Bar
+                data={{
+                  labels: ["deaths", "Active Case", "Recovered"],
+                  datasets: [
+                    {
+                      //label
+                      label: "Daily Cases",
+                      data: [deaths, cases, recovered],
+                      backgroundColor: ["red", "yellow", "green"],
+                      borderColor: ["black", "black", "black"],
+                      borderWidth: 0.5,
+                    },
+                  ],
+                }}
+                height={300}
+                options={{
+                  maintainAspectRatio: false,
+                  scales: {
+                    yAxes: [
+                      {
+                        ticks: {
+                          callback: function (deaths) {
+                            return (deaths / 100000).toFixed(2);
+                          },
+                        },
+                        scaleLabel: {
+                          display: true,
+
+                          labelString: "Cases in lacs",
+                        },
+                      },
+                    ],
+                  },
+                  legend: {
+                    labels: {
+                      fontSize: 15,
+                    },
+                  },
+                }}
               />
             </div>
           </div>

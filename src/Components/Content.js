@@ -5,6 +5,7 @@ import { DiDigitalOcean } from "react-icons/di";
 import { FiFlag } from "react-icons/fi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { MdLocalHospital } from "react-icons/md";
+import { Bar } from "react-chartjs-2";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -55,27 +56,6 @@ const Content = () => {
     return country.continent == continent;
   });
 
-  // console.log(countryAccordingToContinent);
-
-  //   console.log(
-  //     countryAccordingToContinent?.map((e) => {
-  //       const { country, countryInfo } = e;
-  //       return countryInfo;
-  //     }),
-  //     "aosgufgbougr"
-  //   );
-
-  //   const countryInfo = countryAccordingToContinent?.map((e) => {
-  //     const { countryInfo } = e;
-  //     return countryInfo;
-  //   });
-  //   const flag = countryInfo?.map((e) => {
-  //     const { flag } = e;
-  //     return flag;
-  //   });
-
-  //   console.log(flag);
-
   return (
     <div className="main">
       <div className="sidenav">
@@ -110,7 +90,8 @@ const Content = () => {
         <div className="topbar">
           <div>
             <h3>
-              <FaVirus color="orange" size={30} /> CaronaVirus Covid-10 {continent + " "} 
+              <FaVirus color="orange" size={30} /> CaronaVirus Covid-10{" "}
+              {continent + " "}
               Cases
             </h3>
           </div>
@@ -199,34 +180,27 @@ const Content = () => {
                         const {index, continent, cases} = data
                         return( */}
 
-
                 <div className="scrollbar">
-                              
-
-                                    
                   {countryAccordingToContinent?.map((e) => {
                     const { country, active, countryInfo } = e;
-                    
+
                     return (
                       <div
                         className="count-continential"
                         onClick={() => {
-                          navigate('/country', { state: { payload: country } });
+                          navigate("/country", { state: { payload: country } });
                         }}
                       >
-                        
                         <div className="country">
                           <h6 className="country-name">
                             <img className="flag-img" src={countryInfo.flag} />
                             {country}
-                           
                           </h6>
                         </div>
                         <h6>{numDifferentiation(active)}</h6>
                       </div>
                     );
                   })}
-                
                 </div>
               </div>
             </div>
@@ -247,9 +221,44 @@ const Content = () => {
             </div>
             <h6>Daily cases confirmed</h6>
             <div className="third-img">
-              <img
-                className="third-img"
-                src="https://www.ifpri.org/sites/default/files/Blog/covid_figure1.png"
+              <Bar
+                data={{
+                  labels: ["Recovered", "Active Case", "Death"],
+                  datasets: [
+                    {
+                      //label
+                      label: "Daily Cases",
+                      data: [recovered, cases, deaths],
+                      backgroundColor: ["green", "yellow", "red"],
+                      borderColor: ["black", "black", "black"],
+                      borderWidth: 0.5,
+                    },
+                  ],
+                }}
+                height={300}
+                options={{
+                  maintainAspectRatio: false,
+                  scales: {
+                    yAxes: [
+                      {
+                        ticks: {
+                          callback: function (deaths) {
+                            return (deaths / 10000000).toFixed(1);
+                          },
+                        },
+                        scaleLabel: {
+                          labelString: "Cases in Cr",
+                          display: true,
+                        },
+                      },
+                    ],
+                  },
+                  legend: {
+                    labels: {
+                      fontSize: 15,
+                    },
+                  },
+                }}
               />
             </div>
           </div>

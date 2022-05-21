@@ -216,9 +216,13 @@ const Global = () => {
                     yAxes: [
                       {
                         ticks: {
-                          min: 1000000,
-                          max: 700000000,
-                          stepSize: 1000000,
+                          callback: function (deaths) {
+                            return (deaths / 10000000).toFixed(1);
+                          },
+                        },
+                        scaleLabel: {
+                          display: true,
+                          labelString: "Cases in Cr",
                         },
                       },
                     ],
